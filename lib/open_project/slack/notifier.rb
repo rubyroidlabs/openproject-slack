@@ -1,3 +1,5 @@
+require 'httpclient'
+
 class OpenProject::Slack::Notifier
   def speak(msg, channel, attachment=nil, url=nil)
     url = Setting.plugin_openproject_slack['slack_url'] if url.blank?
