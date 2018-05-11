@@ -1,0 +1,20 @@
+en:
+  field_type: Type
+  field_project: Project
+  field_subject: Subject
+  field_description: Description
+  field_due_date: Due date
+  field_category: Category
+  field_status: Status
+  field_assigned_to: Assigned to
+  field_priority: Priority
+  field_fixed_version: Fixed version
+  field_author: Author
+  field_lock_version: Lock version
+  field_done_ratio: Done ratio
+  field_estimated_hours: Estimated hours
+  field_start_date: Start date
+  field_responsible: Responsible
+  field_watcher: Watcher
+  field_attachments: Attachment
+  none: None

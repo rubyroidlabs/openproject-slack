@@ -4,6 +4,10 @@
     <%= styled_text_field_tag 'settings[slack_url]', @settings[:slack_url], size: 30, container_class: '-middle' %>
   </div>
   <div class="form--field">
+    <%= styled_label_tag :default_channel, t(:default_channel) %>
+    <%= styled_text_field_tag 'settings[default_channel]', @settings[:default_channel], size: 30, container_class: '-middle' %>
+  </div>
+  <div class="form--field">
     <%= styled_label_tag :username, t(:username) %>
     <%= styled_text_field_tag 'settings[username]', @settings[:username], size: 30, container_class: '-slim' %>
   </div>
