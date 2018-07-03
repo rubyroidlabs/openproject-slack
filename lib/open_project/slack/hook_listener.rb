@@ -8,10 +8,12 @@ class OpenProject::Slack::HookListener < Redmine::Hook::Listener
     user = page.content.author
     project_url = "<#{object_url project}|#{escape project}>"
     page_url = "<#{object_url page}|#{page.title}>"
-    comment = "[#{project_url}] #{page_url} updated by *#{user}*"
+    message = "[#{project_url}] #{page_url} updated by *#{user}*"
 
     channel = channel_for_project project
     url = Setting.plugin_openproject_slack['slack_url']
+
+    return if channel.blank? || url.blank?
 
     attachment = nil
     if page.content.comments.present?
@@ -19,7 +21,7 @@ class OpenProject::Slack::HookListener < Redmine::Hook::Listener
       attachment[:text] = "#{escape page.content.comments}"
     end
 
-    OpenProject::Slack::Notifier.new.speak(comment, channel, attachment, url)
+    OpenProject::Slack::Notifier.new.speak(message, channel: channel, attachment: attachment)
   end
 
   def redmine_slack_issues_new_after_save(context={})
@@ -30,7 +32,7 @@ class OpenProject::Slack::HookListener < Redmine::Hook::Listener
 
     return if channel.blank? || url.blank?
 
-    msg = "[<#{object_url issue.project}|#{escape issue.project}>] #{escape issue.author} created <#{object_url issue}|#{escape issue}>#{mentions issue.description}"
+    message = "[<#{object_url issue.project}|#{escape issue.project}>] #{escape issue.author} created <#{object_url issue}|#{escape issue}>#{mentions issue.description}"
 
     attachment = {}
     attachment[:text] = escape(issue.description) if issue.description.present?
@@ -54,7 +56,7 @@ class OpenProject::Slack::HookListener < Redmine::Hook::Listener
       short: true
     } # if Setting.plugin_redmine_slack['display_watchers'] == 'yes'
 
-    OpenProject::Slack::Notifier.new.speak(msg, channel, attachment, url)
+    OpenProject::Slack::Notifier.new.speak(message, channel: channel, attachment: attachment)
   end
 
   def redmine_slack_issues_edit_after_save(context={})
@@ -64,7 +66,9 @@ class OpenProject::Slack::HookListener < Redmine::Hook::Listener
     channel = channel_for_project(issue.project)
     url = Setting.plugin_openproject_slack['slack_url']
 
-    msg = "[<#{object_url issue.project}|#{escape issue.project}>] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>#{mentions journal.notes}"
+    return if channel.blank? || url.blank?
+
+    message = "[<#{object_url issue.project}|#{escape issue.project}>] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>#{mentions journal.notes}"
 
     attachment = {}
     attachment[:text] = escape(journal.notes) if journal.notes.present?
@@ -73,7 +77,7 @@ class OpenProject::Slack::HookListener < Redmine::Hook::Listener
       detail_to_hash(issue, key, changeset)
     end
 
-    OpenProject::Slack::Notifier.new.speak(msg, channel, attachment, url)
+    OpenProject::Slack::Notifier.new.speak(message, channel: channel, attachment: attachment)
   end
 
   private
